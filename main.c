@@ -31,14 +31,25 @@ int	on_keypress(int key, t_data *mlx)
 int	main(void)
 {
 	t_data mlx;
+	void *img;
+	int height;
+	int width;
+
+	height = 128;
+	width = 96;
 
 	mlx.mlx_ptr = mlx_init();
 	mlx.win_ptr = mlx_new_window(mlx.mlx_ptr, 640, 480, "window");
 
+	img = mlx_xpm_file_to_image(mlx.mlx_ptr, "./Wizard stay/wizard.xpm", &height, &width);
+	mlx_put_image_to_window(mlx.mlx_ptr, mlx.win_ptr, img, 50, 50);
+
 
 	mlx_loop_hook(mlx.mlx_ptr, &handle_no_event, &mlx);
 	mlx_hook(mlx.win_ptr, KeyPress, KeyPressMask, &on_keypress, &mlx);
-	mlx_hook(mlx.win_ptr, 17, 0, &on_keypress, &mlx);
+	mlx_hook(mlx.win_ptr, 17, 1L, &on_keypress, &mlx);
+
+	mlx_destroy_image(mlx.mlx_ptr, img);
 
 	mlx_loop(mlx.mlx_ptr);
 	mlx_destroy_display(mlx.mlx_ptr);
