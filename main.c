@@ -28,7 +28,45 @@ typedef struct s_data
 	void *floor;
 	void *wall;
 	void *door;
-} t_data;
+}	t_data;
+
+void	destroy_img(t_data mlx)
+{
+	int	i;
+
+	i = 0;
+	while (i < 4)
+	{
+		mlx_destroy_image(mlx.mlx_ptr, mlx.player[i]);
+		i++;
+	}
+	i = 0;
+	while (i < 6)
+	{
+		mlx_destroy_image(mlx.mlx_ptr, mlx.collect.collect[i]);
+		i++;
+	}
+	mlx_destroy_image(mlx.mlx_ptr, mlx.floor);
+	mlx_destroy_image(mlx.mlx_ptr, mlx.wall);
+	mlx_destroy_image(mlx.mlx_ptr, mlx.door);
+	i = 0;
+	while (mlx.map[i])
+	{
+		free(mlx.map[i]);
+		i++;
+	}
+	free(mlx.map);
+}
+
+int	destroy_window(t_data *mlx)
+{
+	mlx_destroy_window(mlx->mlx_ptr, mlx->win_ptr);
+	mlx_destroy_display(mlx->mlx_ptr);
+	free(mlx->mlx_ptr);
+//	destroy_img(*mlx);
+	exit(0);
+	return (0);
+}
 
 /*
 int	handle_no_event(void *data)
@@ -41,7 +79,29 @@ int	handle_no_event(void *data)
 int	on_keypress(int key, t_data *mlx)
 {
 	if (key == XK_Escape)
-		mlx_destroy_window(mlx->mlx_ptr, mlx->win_ptr);
+	{
+		/*
+		int	i;
+
+		i = 0;
+		while (i < 4)
+		{
+			mlx_destroy_image(mlx->mlx_ptr, mlx->player[i]);
+			i++;
+		}
+		i = 0;
+		while (i < 6)
+		{
+			mlx_destroy_image(mlx->mlx_ptr, mlx->collect.collect[i]);
+			i++;
+		}
+		mlx_destroy_image(mlx->mlx_ptr, mlx->wall);
+		mlx_destroy_image(mlx->mlx_ptr, mlx->door);
+		mlx_destroy_image(mlx->mlx_ptr, mlx->floor);
+		*/
+		destroy_img(*mlx);
+		destroy_window(mlx);
+	}
 	else if (key == XK_Up && mlx->map[mlx->player_y - 1][mlx->player_x] != '1')
 	{
 		mlx->map[mlx->player_y][mlx->player_x] = '0';
@@ -73,14 +133,6 @@ int	on_keypress(int key, t_data *mlx)
 	return (0);
 }
 
-int destroy_window(t_data *mlx)
-{
-	mlx_destroy_window(mlx->mlx_ptr, mlx->win_ptr);
-	mlx_destroy_display(mlx->mlx_ptr);
-	free(mlx->mlx_ptr);
-	exit(0);
-	return (0);
-}
 
 void put_game(t_data mlx)
 {
@@ -88,7 +140,7 @@ void put_game(t_data mlx)
 	int y;
 
 	y = 0;
-//	mlx_clear_window(mlx.win_ptr, mlx.win_ptr);
+	mlx_clear_window(mlx.mlx_ptr, mlx.win_ptr);
 	while (mlx.map[y])
 	{
 		x = 0;
@@ -151,6 +203,7 @@ int	main(int argc, char **argv)
 		line = get_next_line(fd);
 		i++;
 	}
+	free(line);
 	mlx.map[i] = '\0';
 	y = 0;
 	while (mlx.map[y])
@@ -176,6 +229,7 @@ int	main(int argc, char **argv)
 
 	mlx.mlx_ptr = mlx_init();
 	mlx.win_ptr = mlx_new_window(mlx.mlx_ptr, x * 32, y * 48, "window");
+
 	mlx.collect.current = 0;
 	mlx.collect.collect[0] = mlx_xpm_file_to_image(mlx.mlx_ptr, "./Wizard stay/magic1.xpm", &height, &width);
 	mlx.collect.collect[1] = mlx_xpm_file_to_image(mlx.mlx_ptr, "./Wizard stay/magic2.xpm", &height, &width);
@@ -200,6 +254,13 @@ int	main(int argc, char **argv)
 
 	mlx_hook(mlx.win_ptr, 17, 0, &destroy_window, &mlx);
 	mlx_loop(mlx.mlx_ptr);
+
+	mlx_destroy_display(mlx.mlx_ptr);
+/*
+*/
+	free(mlx.mlx_ptr);
+
+	
 /*	i = 0;
 	while (i < 4)
 	{
@@ -214,6 +275,8 @@ int	main(int argc, char **argv)
 	}
 	mlx_destroy_image(mlx.mlx_ptr, mlx.floor);
 	mlx_destroy_image(mlx.mlx_ptr, mlx.wall);
+
+
 
 	mlx_loop(mlx.mlx_ptr);
 	
