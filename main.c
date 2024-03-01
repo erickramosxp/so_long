@@ -6,7 +6,7 @@
 #include <X11/keysym.h>
 #include <unistd.h>
 #include <fcntl.h>
-#include<string.h>
+#include <string.h>
 
 typedef struct s_collet
 {
@@ -78,6 +78,8 @@ int	handle_no_event(void *data)
 
 int	on_keypress(int key, t_data *mlx)
 {
+	static int move;
+
 	if (key == XK_Escape)
 	{
 		/*
@@ -129,6 +131,8 @@ int	on_keypress(int key, t_data *mlx)
 		mlx->map[mlx->player_y][mlx->player_x + 1] = 'P';
 		mlx->player_x = mlx->player_x + 1;
 		mlx->player_current = mlx->player[2];
+		move++;
+		printf("%d\n", move);
 	}
 	return (0);
 }
@@ -151,7 +155,7 @@ void put_game(t_data mlx)
 			else if (mlx.map[y][x] == 'P')
 				mlx_put_image_to_window(mlx.mlx_ptr, mlx.win_ptr, mlx.player_current, x * 32, y * 48);
 			else if (mlx.map[y][x] == 'C')
-				mlx_put_image_to_window(mlx.mlx_ptr, mlx.win_ptr, mlx.collect.collect[0],  x * 32, y * 48);
+				mlx_put_image_to_window(mlx.mlx_ptr, mlx.win_ptr, mlx.collect.current_collect,  x * 32, y * 48);
 			else if (mlx.map[y][x] == 'E')
 				mlx_put_image_to_window(mlx.mlx_ptr, mlx.win_ptr, mlx.door,  x * 32, y * 48);
 			else 
@@ -162,8 +166,38 @@ void put_game(t_data mlx)
 	}
 }
 
+void	animation_collect(t_data mlx)
+{
+	static int current;
+
+	if (current == 0)
+	{
+		mlx.collect.current_collect = mlx.collect.collect[0];
+		printf("%d\n", current);
+	}
+	else if (current == 1 * 1000)
+	{
+		mlx.collect.current_collect = mlx.collect.collect[1];
+	}
+	else if (current == 2 * 1000)
+	{
+		mlx.collect.current_collect = mlx.collect.collect[2];
+	}
+	else if (current == 3 * 1000)
+	{
+		mlx.collect.current_collect = mlx.collect.collect[3];
+	}
+	else if (current == 4 * 1000)
+	{
+		mlx.collect.current_collect = mlx.collect.collect[4];
+		current = 0;
+	}
+	current += 1;
+}
+
 int put_init(t_data *mlx)
 {
+	animation_collect(*mlx);
 	put_game(*mlx);
 	return (1);
 }
@@ -225,7 +259,7 @@ int	main(int argc, char **argv)
 	close(fd);
 	height = 48;
 	width = 32;
-
+	mlx.collect.current = 0;
 
 	mlx.mlx_ptr = mlx_init();
 	mlx.win_ptr = mlx_new_window(mlx.mlx_ptr, x * 32, y * 48, "window");
@@ -247,6 +281,7 @@ int	main(int argc, char **argv)
 	mlx.player[2] = mlx_xpm_file_to_image(mlx.mlx_ptr, "./Wizard stay/player_right.xpm", &height, &width);
 	mlx.player[3] = mlx_xpm_file_to_image(mlx.mlx_ptr, "./Wizard stay/player_back.xpm", &height, &width);
 	mlx.player_current = mlx.player[0];
+	mlx.collect.current_collect = mlx.collect.collect[0];
 
 	mlx_hook(mlx.win_ptr, KeyPress, KeyPressMask, &on_keypress, &mlx);
 
