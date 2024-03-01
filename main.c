@@ -60,10 +60,10 @@ void	destroy_img(t_data mlx)
 
 int	destroy_window(t_data *mlx)
 {
+	destroy_img(*mlx);
 	mlx_destroy_window(mlx->mlx_ptr, mlx->win_ptr);
 	mlx_destroy_display(mlx->mlx_ptr);
 	free(mlx->mlx_ptr);
-//	destroy_img(*mlx);
 	exit(0);
 	return (0);
 }
@@ -99,7 +99,7 @@ int	on_keypress(int key, t_data *mlx)
 		mlx_destroy_image(mlx->mlx_ptr, mlx->door);
 		mlx_destroy_image(mlx->mlx_ptr, mlx->floor);
 		*/
-		destroy_img(*mlx);
+	//	destroy_img(*mlx);
 		destroy_window(mlx);
 	}
 	else if (key == XK_Up && mlx->map[mlx->player_y - 1][mlx->player_x] != '1')
@@ -140,7 +140,7 @@ void put_game(t_data mlx)
 	int y;
 
 	y = 0;
-	mlx_clear_window(mlx.mlx_ptr, mlx.win_ptr);
+//	mlx_clear_window(mlx.mlx_ptr, mlx.win_ptr);
 	while (mlx.map[y])
 	{
 		x = 0;
