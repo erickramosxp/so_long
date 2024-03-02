@@ -184,18 +184,30 @@ void put_game(t_data mlx)
 void	animation_collect(t_data **mlx)
 {
 	static int	i;
+	static int	j;
 	static int	frames;
 
-	if (frames == 40)
+	if (frames == 30)
 	{
-		(*mlx)->collect.current_collect = (*mlx)->collect.collect[i];
-		i++;
-		if (i == 5)
-			i = 0;
+		if (j == 0)
+		{
+			(*mlx)->collect.current_collect = (*mlx)->collect.collect[i];
+			i++;
+			if (i == 6)
+				j = 5;
+		}
+		if (i == 6)
+		{
+			(*mlx)->collect.current_collect = (*mlx)->collect.collect[j];
+			j--;
+			if (j == 0)
+				i = 0;
+		}
 		frames = 0;
 	}
 	frames++;
 }
+
 
 void	if_door(t_data **mlx)
 {
