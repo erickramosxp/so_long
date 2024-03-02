@@ -390,7 +390,7 @@ int	main(int argc, char **argv)
 	get_cord_of_collectibles(&mlx);
 
 	mlx.mlx_ptr = mlx_init();
-	mlx.win_ptr = mlx_new_window(mlx.mlx_ptr, (mlx.x - 1) * 32, mlx.y * 48, "window");
+	mlx.win_ptr = mlx_new_window(mlx.mlx_ptr, (mlx.x) * 32, mlx.y * 48, "window");
 	get_img(&mlx);
 	mlx.player_current = mlx.player.player[0];
 	mlx.collect.current_collect = mlx.collect.collect[0];
