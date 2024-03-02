@@ -1,4 +1,5 @@
 #include "./minilibx-linux/mlx.h"
+#include "./minilibx-linux/mlx_int.h"
 #include "./get_next_line/get_next_line.h"
 #include <stdlib.h>
 #include <stdio.h>
@@ -7,6 +8,7 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <string.h>
+
 
 typedef struct s_collect
 {
@@ -43,6 +45,8 @@ typedef struct s_data
     void		*win_ptr;
 	void		*player_current;
 	char		**map;
+	int			x;
+	int			y;
 	t_collect	collect;
 	t_player	player;
 	t_map		maps;
@@ -95,22 +99,12 @@ int	destroy_window(t_data *mlx)
 	return (0);
 }
 
-/*
-int	handle_no_event(void *data)
-{
-	(void)data;
-	This function needs to exist, but it is useless for the moment
-	return (0);
-}*/
-
 int	on_keypress(int key, t_data *mlx)
 {
-	static int move;
+	static int	move;
 
 	if (key == XK_Escape)
-	{
 		destroy_window(mlx);
-	}
 	else if (key == XK_Up && mlx->map[mlx->player.player_y - 1][mlx->player.player_x] != '1')
 	{	
 		if (mlx->map[mlx->player.player_y - 1][mlx->player.player_x] == 'C')
@@ -142,8 +136,6 @@ int	on_keypress(int key, t_data *mlx)
 			mlx->map[mlx->player.player_y][mlx->player.player_x] = 'E';
 		else
 			mlx->map[mlx->player.player_y][mlx->player.player_x] = '0';
-
-
 		mlx->map[mlx->player.player_y + 1][mlx->player.player_x] = 'P';
 		mlx->player.player_y = mlx->player.player_y + 1;
 	}
@@ -164,8 +156,6 @@ int	on_keypress(int key, t_data *mlx)
 			mlx->map[mlx->player.player_y][mlx->player.player_x] = 'E';
 		else
 			mlx->map[mlx->player.player_y][mlx->player.player_x] = '0';
-
-
 		mlx->map[mlx->player.player_y][mlx->player.player_x - 1] = 'P';
 		mlx->player.player_x = mlx->player.player_x - 1;
 	}
@@ -187,8 +177,6 @@ int	on_keypress(int key, t_data *mlx)
 			mlx->map[mlx->player.player_y][mlx->player.player_x] = 'E';
 		else
 			mlx->map[mlx->player.player_y][mlx->player.player_x] = '0';
-
-
 		mlx->map[mlx->player.player_y][mlx->player.player_x + 1] = 'P';
 		mlx->player.player_x = mlx->player.player_x + 1;
 		move++;
@@ -200,11 +188,10 @@ int	on_keypress(int key, t_data *mlx)
 
 void put_game(t_data mlx)
 {
-	int x;
-	int y;
+	int	x;
+	int	y;
 
 	y = 0;
-//	mlx_clear_window(mlx.mlx_ptr, mlx.win_ptr);
 	while (mlx.map[y])
 	{
 		x = 0;
@@ -228,8 +215,8 @@ void put_game(t_data mlx)
 
 void	animation_collect(t_data **mlx)
 {
-	static int i;
-	static int frames;
+	static int	i;
+	static int	frames;
 
 	if (frames == 40)
 	{
@@ -242,13 +229,13 @@ void	animation_collect(t_data **mlx)
 	frames++;
 }
 
-void if_door(t_data **mlx)
+void	if_door(t_data **mlx)
 {
 	if ((*mlx)->collect.qtd_collect == 0)
 		(*mlx)->maps.current_door = (*mlx)->maps.door[1];
 }
 
-int put_init(t_data *mlx)
+int	put_init(t_data *mlx)
 {
 	if_door(&mlx);
 	animation_collect(&mlx);
@@ -256,20 +243,60 @@ int put_init(t_data *mlx)
 	return (1);
 }
 
-int	main(int argc, char **argv)
+void	*load_xpm(t_data mlx, char *src)
 {
-	t_data mlx;
-	int height;
-	int width;
-	int x;
-	int y;
-	char *line;
-	int fd;
-	int i;
+	void	*img;
+	int		height;
+	int		width;
 
-	(void)argc;
+	img = mlx_xpm_file_to_image(mlx.mlx_ptr, src, &height, &width);
+	return (img);
+}
+
+void	get_img_collect(t_data *mlx)
+{
+	mlx->collect.collect[0] = load_xpm(*mlx, "./Wizard stay/magic1.xpm");
+	mlx->collect.collect[1] = load_xpm(*mlx, "./Wizard stay/magic2.xpm");
+	mlx->collect.collect[2] = load_xpm(*mlx, "./Wizard stay/magic3.xpm");
+	mlx->collect.collect[3] = load_xpm(*mlx, "./Wizard stay/magic4.xpm");
+	mlx->collect.collect[4] = load_xpm(*mlx, "./Wizard stay/magic5.xpm");
+	mlx->collect.collect[5] = load_xpm(*mlx, "./Wizard stay/magic6.xpm");
+}
+
+void	get_img_map(t_data *mlx)
+{
+	mlx->maps.door[1] = load_xpm(*mlx, "./Wizard stay/door-open.xpm");
+	mlx->maps.door[0] = load_xpm(*mlx, "./Wizard stay/door-close.xpm");
+	mlx->maps.wall = load_xpm(*mlx, "./Wizard stay/wall.xpm");
+	mlx->maps.floor = load_xpm(*mlx, "./Wizard stay/floor.xpm");
+	mlx->maps.door_close_player[0] = load_xpm(*mlx, "./Wizard stay/door-close-front.xpm");
+	mlx->maps.door_close_player[1] = load_xpm(*mlx, "./Wizard stay/door-close-left.xpm");
+	mlx->maps.door_close_player[2] = load_xpm(*mlx, "./Wizard stay/door-close-right.xpm");
+	mlx->maps.door_close_player[3] = load_xpm(*mlx, "./Wizard stay/door-close-back.xpm");
+}
+
+void	get_img_player(t_data *mlx)
+{
+	mlx->player.player[0] = load_xpm(*mlx, "./Wizard stay/player_front.xpm");
+	mlx->player.player[1] = load_xpm(*mlx, "./Wizard stay/player_left.xpm");
+	mlx->player.player[2] = load_xpm(*mlx, "./Wizard stay/player_right.xpm");
+	mlx->player.player[3] = load_xpm(*mlx, "./Wizard stay/player_back.xpm");
+}
+
+void	get_img(t_data *mlx)
+{
+	get_img_collect(mlx);
+	get_img_map(mlx);
+	get_img_player(mlx);
+}
+
+int	get_qtd_line(char **argv)
+{
+	int		i;
+	char	*line;
+	int		fd;
+
 	fd = open(argv[1], O_RDONLY);
-
 	i = 1;
 	line = get_next_line(fd);
 	while (line)
@@ -279,121 +306,128 @@ int	main(int argc, char **argv)
 		i++;
 	}
 	close(fd);
-	mlx.map = (char **)malloc(sizeof(char *) * i);
-	free(line);
+	return (i);
+}
+
+void	get_map(t_data *mlx, char **argv)
+{
+	int		fd;
+	int		i;
+	char	*line;
+
+	i = get_qtd_line(argv);
+	mlx->map = (char **)malloc(sizeof(char *) * i);
 	fd = open(argv[1], O_RDONLY);
 	line = get_next_line(fd);
 	i = 0;
 	while (line)
 	{
-		mlx.map[i] = ft_strdup(line);
+		mlx->map[i] = ft_strdup(line);
 		free(line);
 		line = get_next_line(fd);
 		i++;
 	}
-
-	free(line);
-	mlx.map[i] = '\0';
-	y = 0;
-	while (mlx.map[y])
-	{
-		x = 0;
-		while (mlx.map[y][x])
-		{
-			if (mlx.map[y][x] == 'P')
-			{
-				mlx.player.player_x = x;
-				mlx.player.player_y = y;
-			}
-			if (mlx.map[y][x] == 'E')
-			{
-				mlx.maps.x_door = x;
-				mlx.maps.y_door = y;
-			}
-			if (mlx.map[y][x] == '\n')
-				mlx.map[y][x] = '\0';
-			x++;
-		}
-		y++;
-	}
 	close(fd);
-	height = 48;
-	width = 32;
+	free(line);
+	mlx->map[i] = '\0';
+}
 
-	mlx.collect.qtd_collect = 0;
+void	get_positions(t_data *mlx)
+{
+	int	x;
+	int	y;
 
-	mlx.mlx_ptr = mlx_init();
-	mlx.win_ptr = mlx_new_window(mlx.mlx_ptr, (x - 1) * 32, y * 48, "window");
 	y = 0;
-	while (mlx.map[y])
+	while (mlx->map[y])
 	{
 		x = 0;
-		while (mlx.map[y][x])
+		while (mlx->map[y][x])
 		{
-			if (mlx.map[y][x] == 'C')
+			if (mlx->map[y][x] == 'P')
 			{
-				mlx.collect.qtd_collect++;
+				mlx->player.player_x = x;
+				mlx->player.player_y = y;
 			}
+			if (mlx->map[y][x] == 'E')
+			{
+				mlx->maps.x_door = x;
+				mlx->maps.y_door = y;
+			}
+			if (mlx->map[y][x] == '\n')
+				mlx->map[y][x] = '\0';
 			x++;
 		}
 		y++;
 	}
-	mlx.collect.cord_x = malloc(sizeof(int) * mlx.collect.qtd_collect);
-	mlx.collect.cord_y = malloc(sizeof(int) * mlx.collect.qtd_collect);
+}
 
+void	get_x_and_y(t_data *mlx)
+{
+	mlx->y = 0;
+	mlx->collect.qtd_collect = 0;
+	while (mlx->map[mlx->y])
+	{
+		mlx->x = 0;
+		while (mlx->map[mlx->y][mlx->x])
+		{
+			if (mlx->map[mlx->y][mlx->x] == 'C')
+			{
+				mlx->collect.qtd_collect++;
+			}
+			mlx->x++;
+		}
+		mlx->y++;
+	}
+}
+
+void	get_cord_of_collectibles(t_data *mlx)
+{
+	int	x;
+	int	y;
+	int	i;
+
+	mlx->collect.cord_x = malloc(sizeof(int) * mlx->collect.qtd_collect);
+	mlx->collect.cord_y = malloc(sizeof(int) * mlx->collect.qtd_collect);
 	y = 0;
 	i = 0;
-	while (mlx.map[y])
+	while (mlx->map[y])
 	{
 		x = 0;
-		while (mlx.map[y][x])
+		while (mlx->map[y][x])
 		{
-			if (mlx.map[y][x] == 'C')
+			if (mlx->map[y][x] == 'C')
 			{
-				mlx.collect.cord_x[i] = x;
-				mlx.collect.cord_y[i] = y;
+				mlx->collect.cord_x[i] = x;
+				mlx->collect.cord_y[i] = y;
 				i++;
 			}
 			x++;
 		}
 		y++;
 	}
+}
 
-	mlx.collect.collect[0] = mlx_xpm_file_to_image(mlx.mlx_ptr, "./Wizard stay/magic1.xpm", &height, &width);
-	mlx.collect.collect[1] = mlx_xpm_file_to_image(mlx.mlx_ptr, "./Wizard stay/magic2.xpm", &height, &width);
-	mlx.collect.collect[2] = mlx_xpm_file_to_image(mlx.mlx_ptr, "./Wizard stay/magic3.xpm", &height, &width);
-	mlx.collect.collect[3] = mlx_xpm_file_to_image(mlx.mlx_ptr, "./Wizard stay/magic4.xpm", &height, &width);
-	mlx.collect.collect[4] = mlx_xpm_file_to_image(mlx.mlx_ptr, "./Wizard stay/magic5.xpm", &height, &width);
-	mlx.collect.collect[5] = mlx_xpm_file_to_image(mlx.mlx_ptr, "./Wizard stay/magic6.xpm", &height, &width);
+int	main(int argc, char **argv)
+{
+	t_data	mlx;
 
+	(void)argc;
+	get_map(&mlx, argv);
+	get_positions(&mlx);
+	get_x_and_y(&mlx);
+	get_cord_of_collectibles(&mlx);
 
-	mlx.maps.door_close_player[0] = mlx_xpm_file_to_image(mlx.mlx_ptr,"./Wizard stay/door-close-front.xpm", &height, &width);
-	mlx.maps.door_close_player[1] = mlx_xpm_file_to_image(mlx.mlx_ptr,"./Wizard stay/door-close-left.xpm", &height, &width);
-	mlx.maps.door_close_player[2] = mlx_xpm_file_to_image(mlx.mlx_ptr,"./Wizard stay/door-close-right.xpm", &height, &width);
-	mlx.maps.door_close_player[3] = mlx_xpm_file_to_image(mlx.mlx_ptr,"./Wizard stay/door-close-back.xpm", &height, &width);
-
-	mlx.maps.door[1] = mlx_xpm_file_to_image(mlx.mlx_ptr,"./Wizard stay/door-open.xpm", &height, &width);
-	mlx.maps.door[0] = mlx_xpm_file_to_image(mlx.mlx_ptr,"./Wizard stay/door-close.xpm", &height, &width);
-	mlx.maps.wall = mlx_xpm_file_to_image(mlx.mlx_ptr,"./Wizard stay/wall.xpm", &height, &width);
-	mlx.maps.floor = mlx_xpm_file_to_image(mlx.mlx_ptr,"./Wizard stay/floor.xpm", &height, &width);
-	mlx.player.player[0] = mlx_xpm_file_to_image(mlx.mlx_ptr, "./Wizard stay/player_front.xpm", &height, &width);
-	mlx.player.player[1] = mlx_xpm_file_to_image(mlx.mlx_ptr, "./Wizard stay/player_left.xpm", &height, &width);
-	mlx.player.player[2] = mlx_xpm_file_to_image(mlx.mlx_ptr, "./Wizard stay/player_right.xpm", &height, &width);
-	mlx.player.player[3] = mlx_xpm_file_to_image(mlx.mlx_ptr, "./Wizard stay/player_back.xpm", &height, &width);
+	mlx.mlx_ptr = mlx_init();
+	mlx.win_ptr = mlx_new_window(mlx.mlx_ptr, (mlx.x - 1) * 32, mlx.y * 48, "window");
+	get_img(&mlx);
 	mlx.player_current = mlx.player.player[0];
 	mlx.collect.current_collect = mlx.collect.collect[0];
 	mlx.maps.current_door = mlx.maps.door[0];
-
 	mlx_hook(mlx.win_ptr, KeyPress, KeyPressMask, &on_keypress, &mlx);
-
 	mlx_loop_hook(mlx.mlx_ptr, &put_init, (void *)&mlx);
-
 	mlx_hook(mlx.win_ptr, 17, 0, &destroy_window, &mlx);
 	mlx_loop(mlx.mlx_ptr);
-
 	mlx_destroy_display(mlx.mlx_ptr);
-
-
 	free(mlx.mlx_ptr);
 	return (0);
 }
