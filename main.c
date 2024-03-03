@@ -57,27 +57,21 @@ void	destroy_img(t_data mlx)
 	int	i;
 
 	i = 0;
-	while (i < 4)
-	{
-		mlx_destroy_image(mlx.mlx_ptr, mlx.player.player[i]);
-		i++;
-	}
-	i = 0;
 	while (i < 6)
 	{
-		mlx_destroy_image(mlx.mlx_ptr, mlx.collect.collect[i]);
-		i++;
-	}
-	i = 0;
-	while (i < 4)
-	{
-		mlx_destroy_image(mlx.mlx_ptr, mlx.maps.door_close_player[i]);
+		if (i < 2)
+			mlx_destroy_image(mlx.mlx_ptr, mlx.maps.door[i]);
+		if (i < 4)
+		{
+			mlx_destroy_image(mlx.mlx_ptr, mlx.maps.door_close_player[i]);
+			mlx_destroy_image(mlx.mlx_ptr, mlx.player.player[i]);
+		}
+		if (i < 6)
+			mlx_destroy_image(mlx.mlx_ptr, mlx.collect.collect[i]);
 		i++;
 	}
 	mlx_destroy_image(mlx.mlx_ptr, mlx.maps.floor);
 	mlx_destroy_image(mlx.mlx_ptr, mlx.maps.wall);
-	mlx_destroy_image(mlx.mlx_ptr, mlx.maps.door[0]);
-	mlx_destroy_image(mlx.mlx_ptr, mlx.maps.door[1]);
 	i = 0;
 	while (mlx.map[i])
 	{
