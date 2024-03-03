@@ -8,3 +8,9 @@ $(NAME):
 	cc $(FLAGS) -c ./get_next_line/*.c
 	mv *.o ./get_next_line
 	cc $(FLAGS) $(SRC) $(LIBMLX) $(FLAGSMLX) ./get_next_line/*.o
+
+minilibx:
+	wget https://cdn.intra.42.fr/document/document/22065/minilibx-linux.tgz
+	tar -xvzf minilibx-linux.tgz
+	rm minilibx-linux.tgz
+	$(MAKE) -C ./minilibx-linux
