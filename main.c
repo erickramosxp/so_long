@@ -220,7 +220,6 @@ void	animation_player(t_data **mlx)
 	static int	i;
 	static int	frames;
 
-	printf("%d %d\n", (*mlx)->direction, i);
 	if (frames == 10)
 	{
 		if ((*mlx)->maps.x_door == (*mlx)->player.player_x
@@ -540,19 +539,18 @@ int	main(int argc, char **argv)
 	t_data	mlx;
 
 	(void)argc;
+	mlx.mlx_ptr = mlx_init();
 	get_map(&mlx, argv);
 	get_positions(&mlx);
 	get_x_and_y(&mlx);
 	get_cord_of_collectibles(&mlx);
-	mlx.direction = 0;
-
-	mlx.mlx_ptr = mlx_init();
-	mlx.win_ptr = mlx_new_window(mlx.mlx_ptr,
-			(mlx.x) * 32, mlx.y * 48, "window");
 	get_img(&mlx);
+	mlx.direction = 0;
 	mlx.player_current = mlx.player.player[0][0];
 	mlx.collect.current_collect = mlx.collect.collect[0];
 	mlx.maps.current_door = mlx.maps.door[0];
+	mlx.win_ptr = mlx_new_window(mlx.mlx_ptr,
+			(mlx.x) * 32, mlx.y * 48, "window");
 	mlx_hook(mlx.win_ptr, KeyPress, KeyPressMask, &on_keypress, &mlx);
 	mlx_loop_hook(mlx.mlx_ptr, &put_init, (void *)&mlx);
 	mlx_hook(mlx.win_ptr, 17, 0, &destroy_window, &mlx);
@@ -561,4 +559,3 @@ int	main(int argc, char **argv)
 	free(mlx.mlx_ptr);
 	return (0);
 }
-
