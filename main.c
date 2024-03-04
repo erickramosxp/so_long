@@ -69,6 +69,19 @@ void	destroy_img_matriz(t_data mlx)
 	}
 }
 
+void	free_matriz(char **matriz)
+{
+	int	i;
+
+	i = 0;
+	while (matriz[i])
+	{
+		free(matriz[i]);
+		i++;
+	}
+	free(matriz);
+}
+
 void	destroy_img(t_data mlx)
 {
 	int	i;
@@ -85,13 +98,6 @@ void	destroy_img(t_data mlx)
 	destroy_img_matriz(mlx);
 	mlx_destroy_image(mlx.mlx_ptr, mlx.maps.floor);
 	mlx_destroy_image(mlx.mlx_ptr, mlx.maps.wall);
-	i = 0;
-	while (mlx.map[i])
-	{
-		free(mlx.map[i]);
-		i++;
-	}
-	free(mlx.map);
 }
 
 int	destroy_window(t_data *mlx)
@@ -102,6 +108,7 @@ int	destroy_window(t_data *mlx)
 	free(mlx->mlx_ptr);
 	free(mlx->collect.cord_x);
 	free(mlx->collect.cord_y);
+	free_matriz(mlx->map);
 	exit(0);
 	return (0);
 }
@@ -135,13 +142,9 @@ void	move_player(t_data **mlx, int x, int y, int index)
 	(*mlx)->direction = index;
 }
 
-int	on_keypress(int key, t_data *mlx)
+void	action_key_press(int key, t_data *mlx)
 {
-	static int	move;
-
-	if (key == XK_Escape)
-		destroy_window(mlx);
-	else if (key == XK_Up && mlx->map
+	if (key == XK_Up && mlx->map
 		[mlx->player.player_y - 1][mlx->player.player_x] != '1')
 	{
 		condition_move_player(&mlx, 0, -1);
@@ -164,8 +167,15 @@ int	on_keypress(int key, t_data *mlx)
 	{
 		condition_move_player(&mlx, +1, 0);
 		move_player(&mlx, +1, 0, 2);
-		move++;
 	}
+}
+
+int	on_keypress(int key, t_data *mlx)
+{
+	if (key == XK_Escape)
+		destroy_window(mlx);
+	else
+		action_key_press(key, mlx);
 	return (0);
 }
 
@@ -243,7 +253,7 @@ void	animation_collect(t_data **mlx)
 	static int	j;
 	static int	frames;
 
-	if (frames == 20)
+	if (frames == 15)
 	{
 		if (j == 0)
 		{
@@ -534,6 +544,35 @@ void	get_cord_of_collectibles(t_data *mlx)
 	}
 }
 
+char	**copy_matriz(char **matriz)
+{
+	char **copy;
+	int	i;
+
+	i = 0;
+	while(matriz[i] != NULL)
+		i++;
+	copy = (char **)malloc(sizeof(char *) * (i + 1));
+	if (!copy)
+		return (0);
+	i = 0;
+	while (matriz[i])
+	{
+		copy[i] = ft_strdup(matriz[i]);
+		i++;
+	}
+	copy[i] = '\0';
+	return (copy);
+}
+
+void	valid_map(char **map)
+{
+	char **copy;
+
+	copy = copy_matriz(map);
+	free_matriz(copy);
+}
+
 int	main(int argc, char **argv)
 {
 	t_data	mlx;
@@ -542,6 +581,7 @@ int	main(int argc, char **argv)
 	mlx.mlx_ptr = mlx_init();
 	get_map(&mlx, argv);
 	get_positions(&mlx);
+	valid_map(mlx.map);
 	get_x_and_y(&mlx);
 	get_cord_of_collectibles(&mlx);
 	get_img(&mlx);
