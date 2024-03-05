@@ -23,9 +23,9 @@
 
 char	*get_next_line(int fd);
 
-size_t	ft_strlen(const char *s);
+size_t	ft_strlen_gnl(const char *s);
 char	*ft_strjoin_gnl(char *s1, char *s2);
-char	*ft_strdup(const char *s);
+char	*ft_strdup_gnl(const char *s);
 void	copy(char *dest, char *src, int i, int j);
 
 #endif

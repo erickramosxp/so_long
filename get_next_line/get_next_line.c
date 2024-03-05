@@ -45,7 +45,7 @@ char	*read_line(int fd, char *rest, int rd)
 			break ;
 		buffer[rd] = '\0';
 		if (!rest)
-			rest = ft_strdup("");
+			rest = ft_strdup_gnl("");
 		rest = ft_strjoin_gnl(rest, buffer);
 		if (check_breakline(rest))
 			break ;
@@ -94,7 +94,7 @@ char	*remove_breakline(char *rest)
 	j = i;
 	while (rest[j] != '\0')
 		j++;
-	temp = ft_strdup(rest);
+	temp = ft_strdup_gnl(rest);
 	free(rest);
 	rest = (char *)malloc((j - i + 1) * sizeof(char));
 	i++;
