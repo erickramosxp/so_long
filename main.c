@@ -230,7 +230,7 @@ void	animation_player(t_data **mlx)
 	static int	i;
 	static int	frames;
 
-	if (frames == 10)
+	if (frames == 50)
 	{
 		if ((*mlx)->maps.x_door == (*mlx)->player.player_x
 			&& (*mlx)->maps.y_door == (*mlx)->player.player_y)
@@ -253,7 +253,7 @@ void	animation_collect(t_data **mlx)
 	static int	j;
 	static int	frames;
 
-	if (frames == 15)
+	if (frames == 50)
 	{
 		if (j == 0)
 		{
@@ -565,24 +565,170 @@ char	**copy_matriz(char **matriz)
 	return (copy);
 }
 
-void	valid_map(char **map)
+int	caracter_of_map(char **map)
+{
+	int	y;
+	int	x;
+	int qtd_door;
+
+	y = 0;
+	qtd_door = 0;
+	while (map[y])
+	{
+		x = 0;
+		while (map[y][x])
+		{
+			if (map[y][x] != '1' && map[y][x] != '0' && map[y][x] != 'C' && map[y][x] != 'P' && map[y][x] != 'E')
+			{
+				// Montar a logica para dar free em tudo se isso ocorrer
+				printf("\n\nCaracter diferente no mapa.\n\n");
+				return (0);
+			}
+			if (map[y][x] == 'E')
+				qtd_door++;
+			x++;
+		}
+		y++;
+	}
+	if (qtd_door > 1)
+		return (0);
+	return (1);
+}
+
+// Quantidade de Saidas
+int	qtd_door_of_map(char **map)
+{
+	int	y;
+	int	x;
+	int qtd_door;
+	int collect;
+	int player;
+
+	y = 0;
+	qtd_door = 0;
+	collect = 0;
+	player = 0;
+	while (map[y])
+	{
+		x = 0;
+		while (map[y][x])
+		{
+			if (map[y][x] == 'E')
+				qtd_door++;
+			if (map[y][x] == 'C')
+				collect++;
+			if (map[y][x] == 'P')
+				player++;
+			x++;
+		}
+		y++;
+	}
+	if (qtd_door > 1 || collect < 1 || player != 1)
+		return (0);
+	return (1);
+}
+
+int	size_map(char **map)
+{
+	int	y;
+	int	line;
+	int prior_line;
+
+	y = 0;
+	while (map[y + 1])
+	{
+		prior_line = ft_strlen(map[y]);
+		line = ft_strlen(map[y + 1]);
+		if (prior_line > line || prior_line < line)
+		{
+			printf("\n\nUma linha maior que a outra.\n\n");
+			return (0);
+		}
+		y++;
+	}
+	return (1);
+}
+
+void	fill_path(char **map, int x, int y, t_data mlx)
+{
+	if (y < 0 || x < 0 || x > mlx.x || y > mlx.y)
+		return ;
+	if (map[y][x] == 'P' || map[y][x] == '\0' || map[y][x] == '1' || map[y][x] == 'E')
+		return ;
+	map[y][x] = 'P';
+	fill_path(map, x + 1, y, mlx);
+	fill_path(map, x - 1, y, mlx);
+	fill_path(map, x, y + 1, mlx);
+	fill_path(map, x, y - 1, mlx);
+}
+
+int	validate_path(char **map, t_data mlx)
+{
+	int i;
+	int	x;
+	int y;
+
+	i = 0;
+	x = mlx.player.player_x;
+	y = mlx.player.player_y;
+	if (map[y + 1][x] == '0')
+		y += 1;
+	else if (map[y - 1][x] == '0')
+		y -= 1;
+	else if (map[y][x + 1] == '0')
+		x += 1;
+	else if (map[y][x - 1] == '0')
+		x -= 1;
+	fill_path(map, x, y, mlx);
+	while (map[i])
+	{
+		printf("%s\n", map[i]);
+		i++;
+	}
+	return (1);
+}
+
+void	valid_map(char **map, t_data mlx)
 {
 	char **copy;
 
 	copy = copy_matriz(map);
+	caracter_of_map(copy);
+	qtd_door_of_map(copy);
+	size_map(copy);
+	validate_path(copy, mlx);
 	free_matriz(copy);
+}
+
+void	validate_file(int argc, char **argv)
+{
+	char	*file;
+	int		i;
+
+	if (argc != 2)
+		exit(1);
+	(void)argv;
+	file = argv[1];
+	i = 0;
+	while (file[i])
+		i++;
+	if (i > 4)
+		file = file + (i - 4);
+	else
+		exit(1);
+	printf("%s\n", file);
 }
 
 int	main(int argc, char **argv)
 {
 	t_data	mlx;
 
-	(void)argc;
+	validate_file(argc, argv);
 	mlx.mlx_ptr = mlx_init();
 	get_map(&mlx, argv);
 	get_positions(&mlx);
-	valid_map(mlx.map);
 	get_x_and_y(&mlx);
+	valid_map(mlx.map, mlx);
 	get_cord_of_collectibles(&mlx);
 	get_img(&mlx);
 	mlx.direction = 0;
