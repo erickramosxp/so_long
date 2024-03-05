@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: erramos <erramos@student.42.rio>           +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/03/05 19:53:46 by erramos           #+#    #+#             */
+/*   Updated: 2024/03/05 19:53:49 by erramos          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "./minilibx-linux/mlx.h"
 #include "./minilibx-linux/mlx_int.h"
 #include "./get_next_line/get_next_line.h"
@@ -144,25 +156,25 @@ void	move_player(t_data **mlx, int x, int y, int index)
 
 void	action_key_press(int key, t_data *mlx)
 {
-	if (key == XK_Up && mlx->map
+	if ((key == XK_Up || key == XK_w) && mlx->map
 		[mlx->player.player_y - 1][mlx->player.player_x] != '1')
 	{
 		condition_move_player(&mlx, 0, -1);
 		move_player(&mlx, 0, -1, 3);
 	}
-	else if (key == XK_Down && mlx->map
+	else if ((key == XK_Down || key == XK_s) && mlx->map
 		[mlx->player.player_y + 1][mlx->player.player_x] != '1')
 	{
 		condition_move_player(&mlx, 0, +1);
 		move_player(&mlx, 0, +1, 0);
 	}
-	else if (key == XK_Left && mlx->map
+	else if ((key == XK_Left || key == XK_a) && mlx->map
 		[mlx->player.player_y][mlx->player.player_x - 1] != '1')
 	{
 		condition_move_player(&mlx, -1, 0);
 		move_player(&mlx, -1, 0, 1);
 	}
-	else if (key == XK_Right &&
+	else if ((key == XK_Right || key == XK_d) &&
 		mlx->map[mlx->player.player_y][mlx->player.player_x + 1] != '1')
 	{
 		condition_move_player(&mlx, +1, 0);
