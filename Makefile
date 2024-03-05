@@ -19,3 +19,6 @@ minilibx:
 
 clean:
 	make clean -C ./libft
+
+fclean: clean
+		rm ./libft/libft.a
