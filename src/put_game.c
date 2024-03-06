@@ -1,3 +1,14 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   put_game.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: erramos <erramos@student.42.rio>           +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/03/06 17:20:40 by erramos           #+#    #+#             */
+/*   Updated: 2024/03/06 17:35:53 by erramos          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "../includes/so_long.h"
 
@@ -11,10 +22,10 @@ void	put_img(t_data mlx, char obj, int x, int y)
 			mlx.win_ptr, mlx.player_current, x, y);
 	else if (obj == 'C')
 		mlx_put_image_to_window(mlx.mlx_ptr,
-			mlx.win_ptr, mlx.collect.current_collect,  x, y);
+			mlx.win_ptr, mlx.collect.current_collect, x, y);
 	else if (obj == 'E')
 		mlx_put_image_to_window(mlx.mlx_ptr,
-			mlx.win_ptr, mlx.maps.current_door,  x, y);
+			mlx.win_ptr, mlx.maps.current_door, x, y);
 	else
 		mlx_put_image_to_window(mlx.mlx_ptr,
 			mlx.win_ptr, mlx.maps.floor, x, y);

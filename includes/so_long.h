@@ -6,7 +6,7 @@
 /*   By: erramos <erramos@student.42.rio>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/05 20:21:13 by erramos           #+#    #+#             */
-/*   Updated: 2024/03/05 20:21:15 by erramos          ###   ########.fr       */
+/*   Updated: 2024/03/06 17:15:22 by erramos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,8 +51,8 @@ typedef struct s_map
 
 typedef struct s_data
 {
-    void		*mlx_ptr;
-    void		*win_ptr;
+	void		*mlx_ptr;
+	void		*win_ptr;
 	void		*player_current;
 	char		**map;
 	int			direction;
