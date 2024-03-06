@@ -192,7 +192,7 @@ void	animation_player(t_data **mlx)
 	static int	i;
 	static int	frames;
 
-	if (frames == 50)
+	if (frames == 15)
 	{
 		if ((*mlx)->maps.x_door == (*mlx)->player.player_x
 			&& (*mlx)->maps.y_door == (*mlx)->player.player_y)
@@ -215,7 +215,7 @@ void	animation_collect(t_data **mlx)
 	static int	j;
 	static int	frames;
 
-	if (frames == 50)
+	if (frames == 15)
 	{
 		if (j == 0)
 		{
@@ -396,6 +396,11 @@ int	get_qtd_line(char **argv)
 	int		fd;
 
 	fd = open(argv[1], O_RDONLY);
+	if (fd <= 0)
+	{
+		perror("Error: ");
+		exit (1);
+	}
 	i = 1;
 	line = get_next_line(fd);
 	while (line)
@@ -416,7 +421,15 @@ void	get_map(t_data *mlx, char **argv)
 
 	i = get_qtd_line(argv);
 	mlx->map = (char **)malloc(sizeof(char *) * i);
+	if (mlx->map == NULL)
+		exit (1);
 	fd = open(argv[1], O_RDONLY);
+	if (fd <= 0)
+	{
+		free_matriz(mlx->map);
+		perror("Error: ");
+		exit (1);
+	}
 	line = get_next_line(fd);
 	i = 0;
 	while (line)
@@ -460,7 +473,7 @@ void	get_positions(t_data *mlx)
 	}
 }
 
-void	get_x_and_y(t_data *mlx)
+void	get_qtd_collect_and_x_y_of_map(t_data *mlx)
 {
 	mlx->y = 0;
 	mlx->collect.qtd_collect = 0;
@@ -542,7 +555,6 @@ int	caracter_of_map(char **map)
 		{
 			if (map[y][x] != '1' && map[y][x] != '0' && map[y][x] != 'C' && map[y][x] != 'P' && map[y][x] != 'E')
 			{
-				// Montar a logica para dar free em tudo se isso ocorrer
 				printf("\n\nCaracter diferente no mapa.\n\n");
 				return (0);
 			}
@@ -558,7 +570,7 @@ int	caracter_of_map(char **map)
 }
 
 // Quantidade de Saidas
-int	qtd_door_of_map(char **map)
+int	valid_qtd_door_of_map(char **map)
 {
 	int	y;
 	int	x;
@@ -586,7 +598,10 @@ int	qtd_door_of_map(char **map)
 		y++;
 	}
 	if (qtd_door > 1 || collect < 1 || player != 1)
+	{
+		printf("Mais de uma saida ou menos de um coletavel ou mais de um player.\n");
 		return (0);
+	}
 	return (1);
 }
 
@@ -624,13 +639,24 @@ void	fill_path(char **map, int x, int y, t_data mlx)
 	fill_path(map, x, y - 1, mlx);
 }
 
+int	check_possible_exit(char **map, t_data mlx)
+{
+	if (map[mlx.maps.y_door + 1][mlx.maps.x_door] == 'P')
+		return (1);
+	else if (map[mlx.maps.y_door - 1][mlx.maps.x_door] == 'P')
+		return (1);
+	else if (map[mlx.maps.y_door][mlx.maps.x_door + 1] == 'P')
+		return (1);
+	else if (map[mlx.maps.y_door][mlx.maps.x_door - 1] == 'P')
+		return (1);
+	return (0);
+}
+
 int	validate_path(char **map, t_data mlx)
 {
-	int i;
 	int	x;
 	int y;
 
-	i = 0;
 	x = mlx.player.player_x;
 	y = mlx.player.player_y;
 	if (map[y + 1][x] == '0')
@@ -642,24 +668,47 @@ int	validate_path(char **map, t_data mlx)
 	else if (map[y][x - 1] == '0')
 		x -= 1;
 	fill_path(map, x, y, mlx);
-	while (map[i])
+	if (!check_possible_exit(map, mlx))
 	{
-		printf("%s\n", map[i]);
+		printf("Não há saida.\n\n");
+		return (0);
+	}
+	return (1);
+}
+
+int	check_all_collectibles(char **map, t_data mlx)
+{
+	int	i;
+	int	x;
+	int	y;
+
+	i = 0;
+	while (i < mlx.collect.qtd_collect)
+	{
+		x = mlx.collect.cord_x[i];
+		y = mlx.collect.cord_y[i];
+		if (map[y + 1][x] != 'P' && map[y - 1][x] != 'P' && map[y][x + 1] != 'P' && map[y][x - 1])
+		{
+			printf("Coletavel inalcançável.\n");
+			return (0);
+		}
 		i++;
 	}
 	return (1);
 }
 
-void	valid_map(char **map, t_data mlx)
+int	valid_map(char **map, t_data mlx)
 {
 	char **copy;
 
 	copy = copy_matriz(map);
-	caracter_of_map(copy);
-	qtd_door_of_map(copy);
-	size_map(copy);
-	validate_path(copy, mlx);
+	if (!caracter_of_map(copy) || !valid_qtd_door_of_map(copy) || !size_map(copy) || !validate_path(copy, mlx) || !check_all_collectibles(copy, mlx))
+	{
+		free_matriz(copy);
+		return (0);
+	}
 	free_matriz(copy);
+	return (1);
 }
 
 void	validate_file(int argc, char **argv)
@@ -677,20 +726,39 @@ void	validate_file(int argc, char **argv)
 		file = file + (i - 4);
 	else
 		exit(1);
-	printf("%s\n", file);
+	if (ft_strncmp(file, ".ber", 4))
+	{
+		printf("Arquivo invalido.\n\n");
+		exit(1);
+	}
+}
+
+void	init_game(char **argv, t_data *mlx)
+{
+	get_map(mlx, argv);
+	get_positions(mlx);
+	get_qtd_collect_and_x_y_of_map(mlx);
+	get_cord_of_collectibles(mlx);
+	if (!valid_map(mlx->map, *mlx))
+	{
+		mlx_destroy_display(mlx->mlx_ptr);
+		free(mlx->mlx_ptr);
+		free_matriz(mlx->map);
+		free(mlx->collect.cord_x);
+		free(mlx->collect.cord_y);
+		exit (1);
+	}
 }
 
 int	main(int argc, char **argv)
 {
 	t_data	mlx;
 
+
+
 	validate_file(argc, argv);
 	mlx.mlx_ptr = mlx_init();
-	get_map(&mlx, argv);
-	get_positions(&mlx);
-	get_x_and_y(&mlx);
-	valid_map(mlx.map, mlx);
-	get_cord_of_collectibles(&mlx);
+	init_game(argv, &mlx);
 	get_img(&mlx);
 	mlx.direction = 0;
 	mlx.player_current = mlx.player.player[0][0];
