@@ -29,7 +29,8 @@ void	validate_file(int argc, char **argv)
 		exit(1);
 	if (ft_strncmp(file, ".ber", 4))
 	{
-		printf("Arquivo invalido.\n\n");
+		printf("Error.\n");
+		printf("Arquivo invalido.\n");
 		exit(1);
 	}
 }

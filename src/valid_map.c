@@ -23,10 +23,11 @@ int	caracter_of_map(char **map)
 		x = 0;
 		while (map[y][x])
 		{
-			if (map[y][x] != '1' && map[y][x] != '0' && map[y][x]
-				!= 'C' && map[y][x] != 'P' && map[y][x] != 'E')
+			if (map[y][x] != '1' && map[y][x] != '0' && map[y][x] != 'C'
+				&& map[y][x] != 'P' && map[y][x] != 'E' && map[y][x] != 'B')
 			{
-				printf("\n\nCaracter diferente no mapa.\n\n");
+				printf("Error.\n");
+				printf("Caracter não reconhecido no mapa.\n");
 				return (0);
 			}
 			x++;
@@ -49,7 +50,8 @@ int	size_map(char **map)
 		line = ft_strlen(map[y + 1]);
 		if (prior_line > line || prior_line < line)
 		{
-			printf("Mapa torto ?\n\n");
+			printf("Error.\n");
+			printf("Mapa desalinhado.\n");
 			return (0);
 		}
 		y++;
@@ -71,6 +73,7 @@ int	check_all_collectibles(char **map, t_data mlx)
 		if (map[y + 1][x] != 'P' && map[y - 1][x]
 			!= 'P' && map[y][x + 1] != 'P' && map[y][x - 1])
 		{
+			printf("Error.\n");
 			printf("Coletavel inalcançável.\n");
 			return (0);
 		}

@@ -86,3 +86,53 @@ void	get_cord_of_collectibles(t_data *mlx)
 		y++;
 	}
 }
+
+void	get_qtd_enemies(t_data *mlx)
+{
+	int	y;
+	int	x;
+
+	y = 0;
+	mlx->blackhole.qtd_enemy = 0;
+	while (mlx->map[y])
+	{
+		x = 0;
+		while (mlx->map[y][x])
+		{
+			if (mlx->map[y][x] == 'B')
+			{
+				mlx->blackhole.qtd_enemy++;
+			}
+			x++;
+		}
+		y++;
+	}
+}
+
+void	get_cord_of_enemies(t_data *mlx)
+{
+	int	x;
+	int	y;
+	int	i;
+
+	mlx->blackhole.cord_x = malloc(sizeof(int) * mlx->blackhole.qtd_enemy);
+	mlx->blackhole.cord_y = malloc(sizeof(int) * mlx->blackhole.qtd_enemy);
+	y = 0;
+	i = 0;
+	while (mlx->map[y])
+	{
+		x = 0;
+		while (mlx->map[y][x])
+		{
+			if (mlx->map[y][x] == 'B')
+			{
+				mlx->blackhole.cord_x[i] = x;
+				mlx->blackhole.cord_y[i] = y;
+				i++;
+			}
+			x++;
+		}
+		y++;
+	}
+}
+

@@ -60,3 +60,19 @@ void	animation_collect(t_data **mlx)
 	}
 	frames++;
 }
+
+void	animation_enemy(t_data **mlx)
+{
+	static int	i;
+	static int	frames;
+
+	if (frames == 15)
+	{
+		(*mlx)->blackhole.current_enemy = (*mlx)->blackhole.enemy[i];
+		i++;
+		if (i == 6)
+			i = 0;
+		frames = 0;
+	}
+	frames++;
+}

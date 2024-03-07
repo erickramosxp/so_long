@@ -22,6 +22,15 @@
 # include <fcntl.h>
 //# include <string.h>
 
+typedef struct s_enemy
+{
+	void	*enemy[7];
+	void	*current_enemy;
+	int		qtd_enemy;
+	int		*cord_x;
+	int		*cord_y;
+}	t_enemy;
+
 typedef struct s_collect
 {
 	void	*collect[6];
@@ -61,6 +70,7 @@ typedef struct s_data
 	t_collect	collect;
 	t_player	player;
 	t_map		maps;
+	t_enemy		blackhole;
 }	t_data;
 
 void	validate_file(int argc, char **argv);
@@ -89,6 +99,8 @@ void	error_map(t_data *mlx);
 void	get_positions(t_data *mlx);
 void	get_qtd_collect_and_x_y_of_map(t_data *mlx);
 void	get_cord_of_collectibles(t_data *mlx);
+void	get_qtd_enemies(t_data *mlx);
+void	get_cord_of_enemies(t_data *mlx);
 
 void	*load_xpm(t_data mlx, char *src);
 void	get_img(t_data *mlx);
@@ -99,6 +111,7 @@ void	get_img_player_left(t_data *mlx);
 void	get_img_player_right(t_data *mlx);
 void	get_img_player_back(t_data *mlx);
 void	get_img_player(t_data *mlx);
+void	get_img_enemy(t_data *mlx);
 
 void	get_img_map_player_in_door_front(t_data *mlx);
 void	get_img_map_player_in_door_left(t_data *mlx);
@@ -107,6 +120,7 @@ void	get_img_map_player_in_door_back(t_data *mlx);
 
 void	animation_player(t_data **mlx);
 void	animation_collect(t_data **mlx);
+void	animation_enemy(t_data **mlx);
 
 void	put_img(t_data mlx, char obj, int x, int y);
 void	put_game(t_data mlx);

@@ -3,13 +3,15 @@ LIBMLX = libmlx_Linux.a
 LIBFT = ./libft/libft.a
 SRC1 =	animation_game.c end_game.c get_map.c get_positions.c \
 		load_img_map.c load_img_player_in_door.c load_img_player.c \
-		load_img.c move_player.c put_game.c utils_game.c \
+		load_img.c move_player.c put_game.c utils_game.c load_enemy.c\
 		valid_map.c valid_name_file.c validate_path.c valid_quant_in_map.c
 SRC_OBJ = $(SRC1:.c=.o)
 SRC_GNL = get_next_line.c get_next_line_utils.c
 SRC = main.c
 FLAGSMLX = -Lmlx -lXext -lX11
 FLAGS = -Wall -Wextra -Werror
+
+all: $(NAME)
 
 $(NAME):
 	cc $(FLAGS) -c $(addprefix get_next_line/, $(SRC_GNL))
@@ -27,6 +29,11 @@ minilibx:
 
 clean:
 	make clean -C ./libft
+	@ rm $(addprefix ./src/, $(SRC_OBJ))
+	@ rm $(addprefix get_next_line/, $(SRC_GNL:.c=.o))
 
 fclean: clean
 		rm ./libft/libft.a
+		rm so_long
+
+re: fclean $(NAME)

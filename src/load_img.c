@@ -27,4 +27,10 @@ void	get_img(t_data *mlx)
 	get_img_collect(mlx);
 	get_img_map(mlx);
 	get_img_player(mlx);
+	get_img_enemy(mlx);
+	mlx->direction = 0;
+	mlx->player_current = mlx->player.player[0][0];
+	mlx->collect.current_collect = mlx->collect.collect[0];
+	mlx->maps.current_door = mlx->maps.door[0];
+	mlx->blackhole.current_enemy = mlx->blackhole.enemy[0];
 }
