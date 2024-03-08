@@ -22,6 +22,17 @@
 # include <fcntl.h>
 //# include <string.h>
 
+typedef struct s_moves
+{
+	void	*img_moves[4];
+	void	*nb_left[10];
+	void	*nb_right[10];
+	void	*hund;
+	void	*cent;
+	void	*dez;
+	void	*uni;
+}	t_moves;
+
 typedef struct s_enemy
 {
 	void	*enemy[7];
@@ -65,12 +76,14 @@ typedef struct s_data
 	void		*player_current;
 	char		**map;
 	int			direction;
+	int			moves;
 	int			x;
 	int			y;
 	t_collect	collect;
 	t_player	player;
 	t_map		maps;
 	t_enemy		blackhole;
+	t_moves		sprite_moves;
 }	t_data;
 
 void	validate_file(int argc, char **argv);
@@ -112,6 +125,9 @@ void	get_img_player_right(t_data *mlx);
 void	get_img_player_back(t_data *mlx);
 void	get_img_player(t_data *mlx);
 void	get_img_enemy(t_data *mlx);
+void	get_imgs_moves(t_data *mlx);
+void	get_img_nb_moves_right(t_data *mlx);
+void	get_img_nb_moves_left(t_data *mlx);
 
 void	get_img_map_player_in_door_front(t_data *mlx);
 void	get_img_map_player_in_door_left(t_data *mlx);

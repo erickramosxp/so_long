@@ -17,7 +17,8 @@ void	fill_path(char **map, int x, int y, t_data mlx)
 	if (y < 0 || x < 0 || x > mlx.x || y > mlx.y)
 		return ;
 	if (map[y][x] == 'P' || map[y][x] == '\0'
-		|| map[y][x] == '1' || map[y][x] == 'E')
+		|| map[y][x] == '1' || map[y][x] == 'E' 
+			|| map[y][x] == 'C' || map[y][x] == 'B')
 		return ;
 	map[y][x] = 'P';
 	fill_path(map, x + 1, y, mlx);
@@ -46,18 +47,14 @@ int	validate_path(char **map, t_data mlx)
 
 	x = mlx.player.player_x;
 	y = mlx.player.player_y;
-	if (map[y + 1][x] == '0')
-		y += 1;
-	else if (map[y - 1][x] == '0')
-		y -= 1;
-	else if (map[y][x + 1] == '0')
-		x += 1;
-	else if (map[y][x - 1] == '0')
-		x -= 1;
-	fill_path(map, x, y, mlx);
+	fill_path(map, x + 1, y, mlx);
+	fill_path(map, x - 1, y, mlx);
+	fill_path(map, x, y + 1, mlx);
+	fill_path(map, x, y - 1, mlx);
 	if (!check_possible_exit(map, mlx))
 	{
-		printf("O game que não tem fim.\n\n");
+		printf("Error.\n");
+		printf("O game que não tem fim.\n");
 		return (0);
 	}
 	return (1);

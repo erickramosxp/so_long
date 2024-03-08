@@ -44,6 +44,21 @@ void	free_matriz(char **matriz)
 	free(matriz);
 }
 
+void	destroy_img_moves(t_data mlx)
+{
+	int	i;
+
+	i = 0;
+	while (i <= 9)
+	{
+		if (i <= 3)
+			mlx_destroy_image(mlx.mlx_ptr, mlx.sprite_moves.img_moves[i]);
+		mlx_destroy_image(mlx.mlx_ptr, mlx.sprite_moves.nb_left[i]);
+		mlx_destroy_image(mlx.mlx_ptr, mlx.sprite_moves.nb_right[i]);
+		i++;
+	}
+}
+
 void	destroy_img(t_data mlx)
 {
 	int	i;
@@ -60,6 +75,7 @@ void	destroy_img(t_data mlx)
 		mlx_destroy_image(mlx.mlx_ptr, mlx.blackhole.enemy[i]);
 		i++;
 	}
+	destroy_img_moves(mlx);
 	destroy_img_matriz(mlx);
 	mlx_destroy_image(mlx.mlx_ptr, mlx.maps.floor);
 	mlx_destroy_image(mlx.mlx_ptr, mlx.maps.wall);

@@ -40,6 +40,8 @@ void	move_player(t_data **mlx, int x, int y, int index)
 	else
 		(*mlx)->player.player_y = (*mlx)->player.player_y + y;
 	(*mlx)->direction = index;
+	(*mlx)->moves +=1;
+	printf("%d\n", (*mlx)->moves);
 }
 
 void	action_key_press(int key, t_data *mlx)

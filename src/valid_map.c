@@ -71,7 +71,7 @@ int	check_all_collectibles(char **map, t_data mlx)
 		x = mlx.collect.cord_x[i];
 		y = mlx.collect.cord_y[i];
 		if (map[y + 1][x] != 'P' && map[y - 1][x]
-			!= 'P' && map[y][x + 1] != 'P' && map[y][x - 1])
+			!= 'P' && map[y][x + 1] != 'P' && map[y][x - 1] != 'P')
 		{
 			printf("Error.\n");
 			printf("Coletavel inalcançável.\n");

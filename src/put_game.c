@@ -34,6 +34,26 @@ void	put_img(t_data mlx, char obj, int x, int y)
 			mlx.win_ptr, mlx.maps.floor, x, y);
 }
 
+void	put_moves(t_data mlx)
+{
+	mlx_put_image_to_window(mlx.mlx_ptr,
+		mlx.win_ptr, mlx.sprite_moves.img_moves[0], 0, 0);
+	mlx_put_image_to_window(mlx.mlx_ptr,
+		mlx.win_ptr, mlx.sprite_moves.img_moves[1], 32, 0);
+	mlx_put_image_to_window(mlx.mlx_ptr,
+		mlx.win_ptr, mlx.sprite_moves.img_moves[2], 64, 0);
+	mlx_put_image_to_window(mlx.mlx_ptr,
+		mlx.win_ptr, mlx.sprite_moves.hund, 80, 0);
+	mlx_put_image_to_window(mlx.mlx_ptr,
+		mlx.win_ptr, mlx.sprite_moves.cent, 96, 0);
+	mlx_put_image_to_window(mlx.mlx_ptr,
+		mlx.win_ptr, mlx.sprite_moves.dez, 112, 0);
+	mlx_put_image_to_window(mlx.mlx_ptr,
+		mlx.win_ptr, mlx.sprite_moves.uni, 128, 0);
+	mlx_put_image_to_window(mlx.mlx_ptr,
+		mlx.win_ptr, mlx.sprite_moves.img_moves[3], 144, 0);
+}
+
 void	put_game(t_data mlx)
 {
 	int	x;
@@ -45,7 +65,10 @@ void	put_game(t_data mlx)
 		x = 0;
 		while (mlx.map[y][x])
 		{
-			put_img(mlx, mlx.map[y][x], x * 32, y * 48);
+			if (((x * 32) < 160) && ((y * 48) < 48))
+				put_moves(mlx);
+			else
+				put_img(mlx, mlx.map[y][x], x * 32, y * 48);
 			x++;
 		}
 		y++;

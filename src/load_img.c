@@ -28,9 +28,16 @@ void	get_img(t_data *mlx)
 	get_img_map(mlx);
 	get_img_player(mlx);
 	get_img_enemy(mlx);
+	get_imgs_moves(mlx);
+	get_img_nb_moves_right(mlx);
+	get_img_nb_moves_left(mlx);
 	mlx->direction = 0;
 	mlx->player_current = mlx->player.player[0][0];
 	mlx->collect.current_collect = mlx->collect.collect[0];
 	mlx->maps.current_door = mlx->maps.door[0];
 	mlx->blackhole.current_enemy = mlx->blackhole.enemy[0];
+	mlx->sprite_moves.hund = mlx->sprite_moves.nb_right[0];
+	mlx->sprite_moves.cent = mlx->sprite_moves.nb_left[0];
+	mlx->sprite_moves.dez = mlx->sprite_moves.nb_right[0];
+	mlx->sprite_moves.uni = mlx->sprite_moves.nb_left[0];
 }

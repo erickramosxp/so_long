@@ -2,7 +2,7 @@ NAME = so_long
 LIBMLX = libmlx_Linux.a
 LIBFT = ./libft/libft.a
 SRC1 =	animation_game.c end_game.c get_map.c get_positions.c \
-		load_img_map.c load_img_player_in_door.c load_img_player.c \
+		load_img_map.c load_img_player_in_door.c load_img_player.c get_img_move.c \
 		load_img.c move_player.c put_game.c utils_game.c load_enemy.c\
 		valid_map.c valid_name_file.c validate_path.c valid_quant_in_map.c
 SRC_OBJ = $(SRC1:.c=.o)

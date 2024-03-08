@@ -42,8 +42,29 @@ void	if_enemy(t_data *mlx)
 	}
 }
 
+void	update_img_moves(t_data *mlx)
+{
+	int	hund;
+	int	cent;
+	int	dez;
+	int	uni;
+
+	hund = mlx->moves / 1000;
+	if (mlx->moves < 1000)
+		cent = mlx->moves / 100;
+	else
+		cent = ((mlx->moves / 100) % 10);
+	dez = ((mlx->moves / 10) % 10);
+	uni = mlx->moves % 10;
+	mlx->sprite_moves.hund = mlx->sprite_moves.nb_right[hund];
+	mlx->sprite_moves.cent = mlx->sprite_moves.nb_left[cent];
+	mlx->sprite_moves.dez = mlx->sprite_moves.nb_right[dez];
+	mlx->sprite_moves.uni = mlx->sprite_moves.nb_left[uni];
+}
+
 int	put_init(t_data *mlx)
 {
+	update_img_moves(mlx);
 	if_enemy(mlx);
 	if_door(&mlx);
 	animation_player(&mlx);
@@ -61,6 +82,7 @@ void	init_game(char **argv, t_data *mlx)
 	get_cord_of_collectibles(mlx);
 	get_qtd_enemies(mlx);
 	get_cord_of_enemies(mlx);
+	mlx->moves = 0;
 	if (!valid_map(mlx->map, *mlx))
 	{
 		mlx_destroy_display(mlx->mlx_ptr);
