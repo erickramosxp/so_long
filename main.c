@@ -88,7 +88,7 @@ int	main(int argc, char **argv)
 			"window");
 	mlx_hook(mlx.win_ptr, KeyPress, KeyPressMask, &on_keypress, &mlx);
 	mlx_loop_hook(mlx.mlx_ptr, &put_init, (void *)&mlx);
-	mlx_hook(mlx.win_ptr, 17, LeaveWindowMask, &destroy_window, &mlx);
+	mlx_hook(mlx.win_ptr, 17, 0, &destroy_window, &mlx);
 	mlx_loop(mlx.mlx_ptr);
 	mlx_destroy_display(mlx.mlx_ptr);
 	free(mlx.mlx_ptr);
