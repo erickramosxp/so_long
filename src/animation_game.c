@@ -40,7 +40,7 @@ void	animation_collect(t_data **mlx)
 	static int	j;
 	static int	frames;
 
-	if (frames == 15)
+	if (frames == 10)
 	{
 		if (j == 0)
 		{
@@ -66,11 +66,11 @@ void	animation_enemy(t_data **mlx)
 	static int	i;
 	static int	frames;
 
-	if (frames == 15)
+	if (frames == 10)
 	{
 		(*mlx)->blackhole.current_enemy = (*mlx)->blackhole.enemy[i];
 		i++;
-		if (i == 6)
+		if (i == 11)
 			i = 0;
 		frames = 0;
 	}

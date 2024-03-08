@@ -64,7 +64,7 @@ void	destroy_img(t_data mlx)
 	int	i;
 
 	i = 0;
-	while (i <= 6)
+	while (i < 12)
 	{
 		if (i < 2)
 			mlx_destroy_image(mlx.mlx_ptr, mlx.maps.door[i]);

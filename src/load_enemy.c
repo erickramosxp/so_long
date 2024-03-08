@@ -28,4 +28,14 @@ void	get_img_enemy(t_data *mlx)
 			"./Wizard stay/blackhole5.xpm");
 	mlx->blackhole.enemy[6] = load_xpm(*mlx,
 			"./Wizard stay/blackhole6.xpm");
+	mlx->blackhole.enemy[7] = load_xpm(*mlx,
+			"./Wizard stay/blackhole7.xpm");
+	mlx->blackhole.enemy[8] = load_xpm(*mlx,
+			"./Wizard stay/blackhole8.xpm");
+	mlx->blackhole.enemy[9] = load_xpm(*mlx,
+			"./Wizard stay/blackhole9.xpm");
+	mlx->blackhole.enemy[10] = load_xpm(*mlx,
+			"./Wizard stay/blackhole10.xpm");
+	mlx->blackhole.enemy[11] = load_xpm(*mlx,
+			"./Wizard stay/blackhole11.xpm");
 }

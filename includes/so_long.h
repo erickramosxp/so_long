@@ -34,7 +34,7 @@ typedef struct s_moves
 
 typedef struct s_enemy
 {
-	void	*enemy[7];
+	void	*enemy[12];
 	void	*current_enemy;
 	int		qtd_enemy;
 	int		*cord_x;
