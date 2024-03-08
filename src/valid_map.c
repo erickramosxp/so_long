@@ -37,7 +37,7 @@ int	caracter_of_map(char **map)
 	return (1);
 }
 
-int	size_map(char **map)
+int	valid_line_map(char **map)
 {
 	int	y;
 	int	line;
@@ -82,6 +82,35 @@ int	check_all_collectibles(char **map, t_data mlx)
 	return (1);
 }
 
+int	valid_map_is_close(char **map, t_data mlx)
+{
+	int	i;
+
+	i = 0;
+	while (i < mlx.y)
+	{
+		if (map[i][0] != '1' || map[i][mlx.x - 1] != '1')
+		{
+			printf("Error.\n");
+			printf("Mapa inválido.\n");
+			return (0);
+		}
+		i++;
+	}
+	i = 0;
+	while (i < mlx.x)
+	{
+		if (map[0][i] != '1' || map[mlx.y - 1][i] != '1')
+		{
+			printf("Error.\n");
+			printf("Mapa inválido.\n");
+			return (0);
+		}
+		i++;
+	}
+	return (1);
+}
+
 int	valid_map(char **map, t_data mlx)
 {
 	char	**copy;
@@ -89,12 +118,18 @@ int	valid_map(char **map, t_data mlx)
 	copy = copy_matriz(map);
 	if (!caracter_of_map(copy) || !valid_qtd_door_of_map(copy)
 		|| !valid_qtd_player_of_map(copy) || !valid_qtd_collect_of_map(copy)
-		|| !size_map(copy) || !validate_path(copy, mlx)
-		|| !check_all_collectibles(copy, mlx))
+		|| !valid_line_map(copy) || !valid_map_is_close(copy, mlx)
+		|| !validate_path(copy, mlx) || !check_all_collectibles(copy, mlx))
 	{
 		free_matriz(copy);
 		return (0);
 	}
 	free_matriz(copy);
+	if (mlx.y >= mlx.x)
+	{
+		printf("Error.\n");
+		printf("O mapa não é retangular.\n");
+		return (0);
+	}
 	return (1);
 }

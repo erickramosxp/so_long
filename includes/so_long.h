@@ -88,18 +88,19 @@ typedef struct s_data
 
 void	validate_file(int argc, char **argv);
 
+int		valid_map(char **map, t_data mlx);
+int		valid_qtd_door_of_map(char **map);
+int		valid_qtd_collect_of_map(char **map);
+int		valid_qtd_player_of_map(char **map);
 int		caracter_of_map(char **map);
 int		valid_qtd_door_of_map(char **map);
-int		size_map(char **map);
+int		valid_line_map(char **map);
+int		valid_map_is_close(char **map, t_data mlx);
 
 void	fill_path(char **map, int x, int y, t_data mlx);
 int		check_possible_exit(char **map, t_data mlx);
 int		validate_path(char **map, t_data mlx);
 int		check_all_collectibles(char **map, t_data mlx);
-int		valid_map(char **map, t_data mlx);
-int		valid_qtd_door_of_map(char **map);
-int		valid_qtd_collect_of_map(char **map);
-int		valid_qtd_player_of_map(char **map);
 
 char	**copy_matriz(char **matriz);
 int		check_if_print(int quant_door, int quant_player, int quant_collect);
@@ -137,6 +138,7 @@ void	get_img_map_player_in_door_back(t_data *mlx);
 void	animation_player(t_data **mlx);
 void	animation_collect(t_data **mlx);
 void	animation_enemy(t_data **mlx);
+void	update_img_moves(t_data *mlx);
 
 void	put_img(t_data mlx, char obj, int x, int y);
 void	put_game(t_data mlx);

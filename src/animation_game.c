@@ -76,3 +76,23 @@ void	animation_enemy(t_data **mlx)
 	}
 	frames++;
 }
+
+void	update_img_moves(t_data *mlx)
+{
+	int	hund;
+	int	cent;
+	int	dez;
+	int	uni;
+
+	hund = mlx->moves / 1000;
+	if (mlx->moves < 1000)
+		cent = mlx->moves / 100;
+	else
+		cent = ((mlx->moves / 100) % 10);
+	dez = ((mlx->moves / 10) % 10);
+	uni = mlx->moves % 10;
+	mlx->sprite_moves.hund = mlx->sprite_moves.nb_right[hund];
+	mlx->sprite_moves.cent = mlx->sprite_moves.nb_left[cent];
+	mlx->sprite_moves.dez = mlx->sprite_moves.nb_right[dez];
+	mlx->sprite_moves.uni = mlx->sprite_moves.nb_left[uni];
+}

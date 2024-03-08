@@ -6,7 +6,7 @@
 /*   By: erramos <erramos@student.42.rio>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/06 17:18:29 by erramos           #+#    #+#             */
-/*   Updated: 2024/03/06 17:31:29 by erramos          ###   ########.fr       */
+/*   Updated: 2024/03/08 10:58:05 by erramos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void	fill_path(char **map, int x, int y, t_data mlx)
 	if (y < 0 || x < 0 || x > mlx.x || y > mlx.y)
 		return ;
 	if (map[y][x] == 'P' || map[y][x] == '\0'
-		|| map[y][x] == '1' || map[y][x] == 'E' 
+		|| map[y][x] == '1' || map[y][x] == 'E'
 			|| map[y][x] == 'C' || map[y][x] == 'B')
 		return ;
 	map[y][x] = 'P';
