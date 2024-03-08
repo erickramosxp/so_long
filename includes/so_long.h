@@ -6,7 +6,7 @@
 /*   By: erramos <erramos@student.42.rio>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/05 20:21:13 by erramos           #+#    #+#             */
-/*   Updated: 2024/03/06 17:15:22 by erramos          ###   ########.fr       */
+/*   Updated: 2024/03/08 12:15:54 by erramos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 # define SO_LONG_H
 
 # include "../minilibx-linux/mlx.h"
-# include "../get_next_line/get_next_line.h"
 # include "libft.h"
 # include <stdio.h>
 # include <X11/X.h>
