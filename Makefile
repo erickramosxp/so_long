@@ -29,6 +29,8 @@ clean:
 	@ rm -f $(addprefix ./src/, $(SRC_OBJ))
 
 fclean: clean
-	rm so_long
+	rm -f ./libft/ft_printf/libftprintf.a
+	rm -f ./libft/libft.a
+	rm -f so_long
 
 re: fclean $(NAME)
